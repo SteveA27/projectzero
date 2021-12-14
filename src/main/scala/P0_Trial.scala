@@ -63,7 +63,7 @@ object P0_Trial{
           println("Option 7: Change Username")
           println("Option 8: Update City")
           println("Option 9: View User Basic Information")
-          println("Please enter the number you 1 - 8: ")
+          println("Please enter the number you 1 - 9: ")
           var inputSelected = readLine().toInt
           if(inputSelected == 1){
             println("Please enter your new journal entry you want to add: ")
@@ -127,6 +127,16 @@ object P0_Trial{
             val newCity = readLine()
             val updateCity = s"UPDATE usergeneral SET City = '$newCity' WHERE userBasicID = $userBasicID;"
             statement.executeUpdate(updateCity)
+          }
+          if(inputSelected == 9){
+            println("Enter user ID: ")
+            var userID = readLine().toInt
+            println("Enter your journal ID: ")
+            var journalID = readLine().toInt
+            val UserBasicQuery = statement.executeQuery(s"SELECT userinformation.userName, usergeneral.City, usergeneral.jobTitle, usergeneral.userBasicID, journalentry.entryDate FROM journalentry, userinformation, usergeneral WHERE userinformation.userID = usergeneral.userID and userinformation.userID = $userID and userinformation.journalID = journalentry.journalID and userinformation.journalID = $journalID;")
+            while(UserBasicQuery.next()){
+             println(UserBasicQuery.getString("userinformation.userName")+ "," +UserBasicQuery.getString("usergeneral.City")+ "," +UserBasicQuery.getString("usergeneral.userBasicID")+ "," +UserBasicQuery.getString("journalentry.entryDate"))
+            }
           }
 
         }while(cont)
