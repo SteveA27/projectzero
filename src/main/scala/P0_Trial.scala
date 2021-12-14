@@ -38,7 +38,7 @@ object P0_Trial{
 
       // there's probably a better way to do this
       var connection: Connection = null
-      println("Hello world")
+
       try {
         // make the connection
         Class.forName(driver)
@@ -56,10 +56,14 @@ object P0_Trial{
           println(Console.RESET)
           println("Option 1: Insert new data to the journal")
           println("Option 2: Update data to the journal")
-          println("Option 3: delete data from the journal")
+          println("Option 3: Delete data from the journal")
           println("Option 4: View the journal")
           println("Option 5: Quit/Exit the journal")
-          println("Please enter the number you 1 -5: ")
+          println("Option 6: View User information")
+          println("Option 7: Change Username")
+          println("Option 8: Update City")
+          println("Option 9: View User Basic Information")
+          println("Please enter the number you 1 - 8: ")
           var inputSelected = readLine().toInt
           if(inputSelected == 1){
             println("Please enter your new journal entry you want to add: ")
@@ -97,6 +101,33 @@ object P0_Trial{
           if(inputSelected == 5){
             cont = false
           }
+          if(inputSelected == 6){
+            println("Enter your journal ID: ")
+            var userID = readLine().toInt
+            val userResult = statement.executeQuery(s"SELECT userinformation.userID, userinformation.userName, userinformation.journalID, journalentry.entryDate  FROM  journalentry, userinformation  WHERE userinformation.journalID = $userID AND userinformation.journalID = journalentry.journalID;")
+
+            while(userResult.next()){
+              println(userResult.getString("userinformation.userID") + "," + userResult.getString("userinformation.userName")+ "," + userResult.getString("userinformation.journalID")+ "," + userResult.getString("journalentry.entryDate"))
+
+            }
+          }
+          if(inputSelected == 7){
+            println("Enter user ID: ")
+            var userID = readLine().toInt
+            println("Enter your new crazy name, must be unique: ")
+            val new_crazy_name = readLine()
+            val updateUsrInfo = s"UPDATE userinformation SET userName = '$new_crazy_name' WHERE userID = $userID;"
+            statement.executeUpdate(updateUsrInfo)
+
+          }
+          if(inputSelected== 8){
+            println("Enter User Basic ID: ")
+            var userBasicID = readLine().toInt
+            println("Update the city you are living in now: ")
+            val newCity = readLine()
+            val updateCity = s"UPDATE usergeneral SET City = '$newCity' WHERE userBasicID = $userBasicID;"
+            statement.executeUpdate(updateCity)
+          }
 
         }while(cont)
         //val num = readLine().toInt
@@ -115,7 +146,7 @@ object P0_Trial{
       connection.close()
     }
 
-    println("Hello")
+
   }
 
 
