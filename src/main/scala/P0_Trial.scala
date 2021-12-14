@@ -54,7 +54,7 @@ object P0_Trial{
           println(Console.BOLD)
           println("Menu Options")
           println(Console.RESET)
-          println("Option 1: Insert new data to the journal")
+          println("Option 1: Insert new data to the journal for your story: ")
           println("Option 2: Update data to the journal")
           println("Option 3: Delete data from the journal")
           println("Option 4: View the journal")
@@ -63,7 +63,13 @@ object P0_Trial{
           println("Option 7: Change Username")
           println("Option 8: Update City")
           println("Option 9: View User Basic Information")
-          println("Please enter the number you 1 - 9: ")
+          println("Option 10: Please enter the user information of your character, make sure you create your character entry first before using this option: ")
+          println("Option 11: Please enter the user general information of your character, do this last, after user information and character journal entry: ")
+          println("Option 12: Delete character user information, don't do this before the basic information is deleted")
+          println("Option 13: Delete character basic information, do this first, before any of the deletes")
+
+          println("Remember when creating a character you should follow the instructions when given")
+          println("Please enter an option, from 1 - 13: ")
           var inputSelected = readLine().toInt
           if(inputSelected == 1){
             println("Please enter your new journal entry you want to add: ")
@@ -71,8 +77,12 @@ object P0_Trial{
             println("Please enter a number that starts at 200, remember the number you pick, because you can't repeat it, unless you delete your entry: ")
 
             var newID = readLine().toInt
+
             println("Please input the today's date in the format: 'YYYY-MM-DD'")
             var entryJournalDate = readLine()
+
+
+
             val sql = s"INSERT INTO journalentry VALUES ($newID,'$new_entry', '$entryJournalDate');"
             statement.executeUpdate(sql)
           }
@@ -137,6 +147,48 @@ object P0_Trial{
             while(UserBasicQuery.next()){
              println(UserBasicQuery.getString("userinformation.userName")+ "," +UserBasicQuery.getString("usergeneral.City")+ "," +UserBasicQuery.getString("usergeneral.userBasicID")+ "," +UserBasicQuery.getString("journalentry.entryDate"))
             }
+
+          }
+          if(inputSelected == 10){
+            println("Please enter a number that starts at 200, remember the number you pick, because you can't repeat it, unless you delete your entry: ")
+
+            var newID = readLine().toInt
+            println("Please enter the user ID for you character: ")
+            var userIDForCharacter = readLine().toInt
+            println("Please enter a username or crazy name for your character: ")
+            val newUsername = readLine()
+            val userSQL = s"INSERT INTO userinformation VALUES ($userIDForCharacter, '$newUsername',$newID);"
+            statement.executeUpdate(userSQL)
+
+          }
+          if(inputSelected == 11){
+
+            println("Please enter the user ID for you character: ")
+            var userIDForCharacter = readLine().toInt
+            println("Please enter your character's basic information ID: ")
+            var userBID = readLine().toInt
+            println("Please enter your character's city the character is from: ")
+            val charCity = readLine()
+            println("Please enter your character's job: ")
+            val charJob = readLine()
+
+
+
+            val basicSQL = s"INSERT INTO usergeneral VALUES($userIDForCharacter, '$charCity', '$charJob', $userBID);"
+            statement.executeUpdate(basicSQL)
+
+          }
+          if(inputSelected == 12){
+            println("Please enter the ID of the journal entry you want to delete")
+            var deleteID = readLine().toInt
+            val deleteSQL = s"DELETE FROM userinformation WHERE journalID = $deleteID;"
+            statement.executeUpdate(deleteSQL)
+          }
+          if(inputSelected == 13){
+            println("Please enter the user ID of the character you want to delete")
+            var deleteID = readLine().toInt
+            val deleteSQL = s"DELETE FROM usergeneral WHERE userID = $deleteID;"
+            statement.executeUpdate(deleteSQL)
           }
 
         }while(cont)
