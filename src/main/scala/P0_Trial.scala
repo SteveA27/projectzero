@@ -37,7 +37,7 @@ object P0_Trial{
         .option("password", password).option("driver", driver).load())*/
 
       // there's probably a better way to do this
-      var connection:Connection = null
+      var connection: Connection = null
       println("Hello world")
       try {
         // make the connection
@@ -46,28 +46,75 @@ object P0_Trial{
 
         // create the statement, and run the select query
         val statement = connection.createStatement()
-         val num = readLine().toInt
-        val new_entry = readLine()
+        var cont = true
+
+
+        do{
+
+          println(Console.BOLD)
+          println("Menu Options")
+          println(Console.RESET)
+          println("Option 1: Insert new data to the journal")
+          println("Option 2: Update data to the journal")
+          println("Option 3: delete data from the journal")
+          println("Option 4: View the journal")
+          println("Option 5: Quit/Exit the journal")
+          println("Please enter the number you 1 -5: ")
+          var inputSelected = readLine().toInt
+          if(inputSelected == 1){
+            println("Please enter your new journal entry you want to add: ")
+            val new_entry = readLine()
+            println("Please enter a number that starts at 200, remember the number you pick, because you can't repeat it, unless you delete your entry: ")
+
+            var newID = readLine().toInt
+            println("Please input the today's date in the format: 'YYYY-MM-DD'")
+            var entryJournalDate = readLine()
+            val sql = s"INSERT INTO journalentry VALUES ($newID,'$new_entry', '$entryJournalDate');"
+            statement.executeUpdate(sql)
+          }
+          if(inputSelected == 2){
+            println("Please enter the journal ID for the journal entry you want to update: ")
+            var inTableID = readLine().toInt
+            println("Enter your new journal entry here: ")
+            val updatedJournalEntry = readLine()
+            val updateSQL = s"UPDATE journalentry SET entryJournal = '$updatedJournalEntry' WHERE journalID = $inTableID;"
+            statement.executeUpdate(updateSQL)
+          }
+          if(inputSelected == 3){
+            println("Please enter the ID of the journal entry you want to delete")
+            var deleteID = readLine().toInt
+            val deleteSQL = s"DELETE FROM journalentry WHERE journalID = $deleteID;"
+            statement.executeUpdate(deleteSQL)
+          }
+          if(inputSelected == 4){
+            val resultSet = statement.executeQuery("SELECT * FROM journalentry;")
+            while (resultSet.next()) {
+
+
+              println(resultSet.getString(1) + ", " + resultSet.getString(2) + ", " + resultSet.getString(3))
+            }
+          }
+          if(inputSelected == 5){
+            cont = false
+          }
+
+        }while(cont)
+        //val num = readLine().toInt
+        //val new_entry = readLine()
+
+
+        //val sql = s"INSERT INTO journalentry VALUES ($num,'$new_entry', '2021-11-12');"
+        //statement.executeUpdate(sql)
 
 
 
 
-          val sql = s"INSERT INTO journalentry VALUES ($num,'$new_entry', '2021-11-12');"
-          statement.executeUpdate(sql)
-
-
-
-        val resultSet = statement.executeQuery("SELECT * FROM journalentry;")
-        while ( resultSet.next() ) {
-
-
-          println(resultSet.getString(1)+", " +resultSet.getString(2) +", " +resultSet.getString(3))
-        }
       } catch {
         case e: Throwable => e.printStackTrace
       }
       connection.close()
     }
+
     println("Hello")
   }
 
